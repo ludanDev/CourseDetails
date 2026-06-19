@@ -340,83 +340,88 @@
 
         console.log('Ludan webpage loaded successfully with all interactive features!');
 
-// تكوين الاتصال بقاعدة البيانات (مستبدل بنصوصك المشفرة)
-const _0xconfig = {
-    // ضعي هنا النص المشفر الخاص بالـ URL اللي طلعتيه من خطوة 4
-    u: "aHR0cHM6Ly9hb2ViZ2NlenpuemdoeHJ6aWx2cS5zdXBhYmFzZS5jby9yZXN0L3YxLw==", 
-    // ضعي هنا النص المشفر الخاص بالـ API Key اللي طلعتيه من خطوة 4
-    k: "c2JfcHVibGlzaGFibGVfc1hwcEFBRTNYZTFxVGFZMkxscUdYQV9meU12MzRUTQ==" 
-};
+// كود تجريبي بروابط مباشرة للتأكد من المشكلة
+const SUPABASE_URL = "https://https://aoebgcezznzghxrzilvq.supabase.co/rest/v1/"; // ضعي رابط الـ URL الحقيقي هنا
+const SUPABASE_ANON_KEY = "sb_publishable_sXppAAE3Xe1qTaY2LlqGXA_fyMv34TM"; // ضعي الـ anon key الحقيقي هنا
 
-// العبارات التسويقية مشفرة مسبقاً وجاهزة لضمان الخصوصية وعدم كشفها
-const _0xalerts = [
-    "2KfZhti22YUg2LfZp9mE2Kgg2KzYr9mK2K8g2YTZhNio2LHYp9mF2Kwg2YTZhNiq2YjYp9Kg8J+UpQ==", // انضم طالب جديد للبرنامج للتو 🔥
-    "2KrZhSAn2KrYo9mD2YrYryAn2KrdN9mH2LHYg9mF2K3ZgtiNINmF2YLYudivINmB2Yog2KfZhNiv2YHYudmHINCfkpU=", // تم تأكيد حجز مقعد جديد في الدفعة 🔥
-    "2KrZhSAn2KrdN9mH2LHYg9mF2K3ZgtiNINmF2YLYudivINmB2Yog2KfZhNiv2YHYudmHINmK2KfZhNit2KfZhNmK2Kkg4p+S", // تم حجز مقعد جديد في الدفعة الحالية ⏳
-    "2LfZp9mE2Kgg2KzYr9mK2K8g2KjYr9ijINix2K3ZhNiq2YfZhyDZhdi2YrYp9mGINin2YTYp9mGINCfkYI=" // طالب جديد بدأ رحلته معنا الآن 👋
-];
-
-function _0xdecode(str) {
-    return decodeURIComponent(escape(atob(str)));
-}
-
-// 1. عند الضغط على زر الواتساب: يتم إرسال الإشارة فوراً لـ Supabase في الخلفية
-const whatsappBtn = document.getElementById('whatsapp-btn');
-if(whatsappBtn) {
-    whatsappBtn.addEventListener('click', () => {
-        const randomText = _0xalerts[Math.floor(Math.random() * _0xalerts.length)];
-        
-        fetch(`${_0xdecode(_0xconfig.u)}/rest/v1/bookings`, {
-            method: 'POST',
-            headers: {
-                'apikey': _0xdecode(_0xconfig.k),
-                'Authorization': `Bearer ${_0xdecode(_0xconfig.k)}`,
-                'Content-Type': 'application/json',
-                'Prefer': 'return=minimal'
-            },
-            body: JSON.stringify({ text: randomText }) 
-        }).catch(() => {});
-    });
-}
-
-// 2. دالة جلب البيانات من السيرفر وعرضها في البوب أب للزوار الآخرين
-function fetchAndShowAlerts() {
+function showSocialProof() {
     const popup = document.getElementById('social-proof-popup');
     const textEl = document.getElementById('popup-text');
     const timeEl = document.getElementById('popup-time');
     
-    if (!popup || !textEl || !timeEl) return;
+    if (!popup || !textEl || !timeEl) {
+        console.error("لم يتم العثور على عناصر الـ HTML! تأكدي من الـ IDs");
+        return;
+    }
 
-    fetch(`${_0xdecode(_0xconfig.u)}/rest/v1/bookings?select=*&order=created_at.desc&limit=5`, {
+    // جلب البيانات مباشرة
+    fetch(`${SUPABASE_URL}/rest/v1/bookings?select=*&order=created_at.desc&limit=5`, {
         method: 'GET',
         headers: {
-            'apikey': _0xdecode(_0xconfig.k),
-            'Authorization': `Bearer ${_0xdecode(_0xconfig.k)}`
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
         }
     })
-    .then(res => res.json())
+    .then(res => {
+        if (!res.ok) throw new Error("سيرفر سوبابيز أعاد خطأ: " + res.status);
+        return res.json();
+    })
     .then(data => {
-        if (!data || data.length === 0) return;
+        console.log("البيانات وصلت بنجاح من سوبابيز:", data);
+        if (!data || data.length === 0) {
+            console.warn("قاعدة البيانات فارغة تماماً! اضغطي على زر الواتساب أولاً لتسجيل حجز");
+            return;
+        }
         
-        // اختيار حجز عشوائي من آخر الحجوزات الحقيقية المسجلة
+        // اختيار حجز عشوائي وفك تشفيره
         const randomBooking = data[Math.floor(Math.random() * data.length)];
         
-        textEl.innerHTML = _0xdecode(randomBooking.text);
+        // دالة فك تشفير النصوص العربية
+        const decodeText = (str) => decodeURIComponent(escape(atob(str)));
+        
+        textEl.innerHTML = decodeText(randomBooking.text);
         timeEl.textContent = "قبل قليل";
         
-        // تأثير الظهور بالـ CSS المباشر لضمان العمل على GitHub Pages
+        // إظهار البوب أب
         popup.style.opacity = "1";
         popup.style.transform = "translateY(0)";
         popup.style.pointerEvents = "auto";
         
-        // إخفاء البوب أب بعد 4.5 ثوانٍ
+        // إخفاء بعد 4.5 ثوانٍ
         setTimeout(() => {
             popup.style.opacity = "0";
             popup.style.transform = "translateY(40px)";
             popup.style.pointerEvents = "none";
         }, 4500);
-    }).catch(() => {});
+    })
+    .catch(err => {
+        console.error("فشل الاتصال بسوبابيز تماماً. السبب:", err.message);
+    });
 }
 
-// تفقد قاعدة البيانات وعرض إشعار جديد كل 18 ثانية للزوار
-setInterval(fetchAndShowAlerts, 18000);
+// زر الواتساب للإرسال
+const whatsappBtn = document.getElementById('whatsapp-btn');
+if(whatsappBtn) {
+    whatsappBtn.addEventListener('click', () => {
+        // نص مشفر جاهز (انضم طالب جديد للبرنامج للتو 🔥)
+        const encText = "2KfZhti22YUg2LfZp9mE2Kgg2KzYr9mK2K8g2YTZhNio2LHYp9mF2Kwg2YTZhNiq2YjYp9Kg8J+UpQ== ";
+        
+        fetch(`${SUPABASE_URL}/rest/v1/bookings`, {
+            method: 'POST',
+            headers: {
+                'apikey': SUPABASE_ANON_KEY,
+                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                'Content-Type': 'application/json',
+                'Prefer': 'return=minimal'
+            },
+            body: JSON.stringify({ text: encText }) 
+        })
+        .then(() => console.log("تم تسجيل الضغطة بنجاح في الجدول!"))
+        .catch(err => console.error("فشل تسجيل الضغطة:", err));
+    });
+}
+
+// تشغيل الفحص فوراً للتجربة بعد 3 ثوانٍ
+setTimeout(showSocialProof, 3000);
+// تكرار كل 18 ثانية
+setInterval(showSocialProof, 18000);
