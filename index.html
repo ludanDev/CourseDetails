@@ -578,8 +578,9 @@
                 تحوّل الأساسيات إلى مشروع حقيقي وخطوة عملية أقرب للسوق.
             </p>
             
-          <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+<div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
     <a href="https://wa.me/201505607621?text=أريد%20الانضمام%20للمسار" 
+       id="whatsapp-btn"
        target="_blank" 
        class="bg-white text-slate-950 px-8 py-3 rounded-full text-lg font-bold hover:bg-slate-100 transition-all shadow-xl active:scale-95 w-fit flex items-center justify-center">
         <i class="fas fa-user-plus ml-2 text-dark"></i> 
@@ -591,9 +592,21 @@
 </section>
 
 
-    
+    <!-- Live Social Proof Popup -->
+<div id="social-proof-popup" 
+     class="fixed bottom-6 left-6 z-[9999] flex items-center gap-4 bg-white/95 backdrop-blur-md border border-slate-200 p-4 rounded-2xl shadow-2xl max-w-sm font-ibm-plex-sans-arabic" 
+     style="transition: all 0.5s ease; opacity: 0; transform: translateY(40px); pointer-events: none;" 
+     dir="rtl">
+    <div class="flex-shrink-0 w-10 h-10 rounded-full bg-slate-900 text-white flex items-center justify-center text-sm shadow-md">
+        <i class="fas fa-fire text-orange-500 animate-pulse"></i>
+    </div>
+    <div class="flex-1">
+        <p id="popup-text" class="text-sm font-bold text-slate-900 leading-tight">جاري تحميل التحديثات...</p>
+        <p id="popup-time" class="text-[11px] text-slate-400 mt-1 font-medium">الآن</p>
+    </div>
+</div>
 
-  <script src="script.js"></script>
+  <script src="script.js" defer></script>
 
 
  
